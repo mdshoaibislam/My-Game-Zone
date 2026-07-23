@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shoaib Game Zone</title>
+
+    <!-- Website Favicon / Icon -->
+    <link rel="icon" type="image/png" href="https://www.image2url.com/r2/default/images/1784823435951-73fc5e96-4f2c-456c-81ec-941363f3b75d.png">
+
+    <!-- Google Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Hind+Siliguri:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Three.js Library & Renderers for Game -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/renderers/CSS2DRenderer.js"></script>
+
+    <style>
+        :root {
+            --bg-color: #070913;
+            --card-bg: rgba(18, 22, 41, 0.65);
+            --border-color: rgba(0, 243, 255, 0.25);
+            --primary-neon: #00f3ff;
+            --secondary-neon: #ff007f;
+            --accent-yellow: #ffe600;
+            --text-color: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Hind Siliguri', 'Orbitron', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 243, 255, 0.12) 0%, transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(255, 0, 127, 0.12) 0%, transparent 45%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            padding-bottom: 60px;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Section */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: rgba(7, 9, 19, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--primary-neon);
+            text-shadow: 0 0 10px var(--primary-neon);
+        }
+
+        .nav-status {
+            font-size: 0.9rem;
+            color: var(--primary-neon);
+            border: 1px solid var(--primary-neon);
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: rgba(0, 243, 255, 0.05);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.2);
+        }
+
+        /* Header & Hero */
+        header {
+            text-align: center;
+            padding: 70px 20px 40px;
+        }
+
+        .title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #fff;
+            text-shadow: 0 0 15px var(--primary-neon), 0 0 30px var(--primary-neon);
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            height: 35px;
+        }
+
+        .typing-text {
+            color: var(--secondary-neon);
+            font-weight: bold;
+            border-right: 2px solid var(--secondary-neon);
+            padding-right: 4px;
+            animation: blink 0.7s infinite;
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            color: var(--secondary-neon);
+            text-shadow: 0 0 8px var(--secondary-neon);
+        }
+
+        /* Grid System */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        /* Glassmorphism Game Card */
+        .game-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-neon);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.35);
+        }
+
+        .card-banner {
+            height: 180px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .banner-runner { background: linear-gradient(135deg, #0d1b2a, #1b263b); border-bottom: 2px solid var(--primary-neon); }
+        .banner-racing { background: linear-gradient(135deg, #2b0938, #590d82); border-bottom: 2px solid var(--secondary-neon); }
+        .banner-skate { background: linear-gradient(135deg, #002b36, #073642); border-bottom: 2px solid var(--accent-yellow); }
+
+        .banner-icon {
+            font-size: 4.5rem;
+            opacity: 0.85;
+            transition: transform 0.5s ease;
+        }
+
+        .game-card:hover .banner-icon {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        .card-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .tag-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .game-tag {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .tag-runner { background: rgba(0, 243, 255, 0.15); color: var(--primary-neon); border: 1px solid var(--primary-neon); }
+        .tag-racing { background: rgba(255, 0, 127, 0.15); color: var(--secondary-neon); border: 1px solid var(--secondary-neon); }
+        .tag-skate { background: rgba(255, 230, 0, 0.15); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+
+        .game-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .game-desc {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            line-height: 1.5;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        /* Play Button */
+        .play-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-neon), #0066ff);
+            color: #000;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+
+        .play-btn:hover {
+            box-shadow: 0 0 20px var(--primary-neon);
+            transform: scale(1.02);
+        }
+
+        /* Modal Overlay */
+        .game-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            border: 1px solid var(--primary-neon);
+            width: 100%;
+            max-width: 950px;
+            height: 85vh;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 12px 24px;
+            background: rgba(18, 22, 41, 0.95);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 10;
+        }
+
+        .modal-title {
+            color: var(--primary-neon);
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .modal-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .fullscreen-btn {
+            background: transparent;
+            border: 1px solid var(--primary-neon);
+            color: var(--primary-neon);
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .fullscreen-btn:hover {
+            background: rgba(0, 243, 255, 0.2);
+            box-shadow: 0 0 10px var(--primary-neon);
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            color: var(--secondary-neon);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .modal-body {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            background-color: #87ceeb;
+        }
+
+        /* GAME UI STYLES INSIDE MODAL */
+        .game-container-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .character-label {
+            color: #ffffff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 4px 10px;
+            background: rgba(0, 150, 136, 0.85);
+            border-radius: 8px;
+            border: 1px solid #00ffcc;
+            white-space: nowrap;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        #top-bar { position: absolute; top: 15px; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 0 20px; box-sizing: border-box; z-index: 10; }
+        .ui-btn { background: linear-gradient(135deg, #00b4db, #0083b0); color: #ffffff; border: 1px solid #ffffff; padding: 10px 20px; border-radius: 30px; font-size: 14px; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); transition: transform 0.2s; }
+        .ui-btn:active { transform: scale(0.95); }
+        #restart-btn-ui { background: linear-gradient(135deg, #ff4b1f, #ff9068); box-shadow: 0 4px 15px rgba(255, 75, 31, 0.3); border: none; }
+        
+        #score-board { position: absolute; top: 65px; left: 20px; background: rgba(255, 255, 255, 0.85); color: #333; padding: 6px 14px; border-radius: 20px; font-size: 16px; font-weight: bold; border: 1px solid rgba(0, 0, 0, 0.1); backdrop-filter: blur(5px); z-index: 10; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        #score-val { color: #0083b0; font-size: 20px; text-shadow: 0 0 2px rgba(0,0,0,0.2); }
+
+        #controls-container { 
+            position: absolute; 
+            bottom: 20px; 
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 15px;
+            width: auto;
+            max-width: 90%;
+            z-index: 10; 
+        }
+        .nav-btn { 
+            width: 60px; 
+            height: 60px; 
+            background: rgba(255, 255, 255, 0.4); 
+            border: 2px solid #ffffff; 
+            color: #1a2a3a; 
+            border-radius: 50%; 
+            font-size: 22px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            backdrop-filter: blur(5px); 
+            transition: background 0.2s, transform 0.1s; 
+            -webkit-tap-highlight-color: transparent; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .nav-btn:active { background: rgba(255, 255, 255, 0.7); transform: scale(0.92); }
+        #jump-btn { 
+            width: 75px; 
+            height: 75px; 
+            background: linear-gradient(135deg, #11998e, #38ef7d); 
+            border: 2px solid #ffffff; 
+            color: white; 
+            border-radius: 50%; 
+            font-size: 16px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            box-shadow: 0 6px 20px rgba(56, 239, 125, 0.4); 
+            transition: transform 0.1s; 
+            -webkit-tap-highlight-color: transparent; 
+        }
+        #jump-btn:active { transform: scale(0.9); }
+
+        .overlay-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 224, 178, 0.85); display: flex; flex-direction: column; justify-content: center; align-items: center; display: none; z-index: 20; backdrop-filter: blur(8px); }
+        #game-over-text { font-size: 32px; color: #d9534f; text-align: center; font-weight: 900; text-shadow: 0 4px 10px rgba(217, 83, 79, 0.3); animation: pulse 1s infinite alternate; }
+        
+        #start-screen { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to bottom, #fde047, #f97316); display:flex; flex-direction: column; justify-content:center; align-items:center; z-index:100; }
+        .game-title-text { color: #ffffff; font-size: 28px; font-weight: bold; margin-bottom: 20px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); text-align: center; line-height: 1.4; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); text-shadow: 0 4px 10px rgba(217, 83, 79, 0.3); }
+            100% { transform: scale(1.05); text-shadow: 0 4px 20px rgba(217, 83, 79, 0.6); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navbar -->
+    <nav>
+        <div class="logo">
+            <i class="fa-solid fa-gamepad"></i> Shoaib Game Zone
+        </div>
+        <div class="nav-status">
+            <i class="fa-solid fa-circle" style="color: #00ff66; font-size: 0.6rem; margin-right: 5px;"></i> অনলাইন
+        </div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header>
+        <h1 class="title">Shoaib Game Zone</h1>
+        <p class="subtitle">উপভোগ করুন আমার তৈরি <span class="typing-text"></span></p>
+    </header>
+
+    <!-- Main Game Grid -->
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title"><i class="fa-solid fa-fire"></i> গেম কালেকশন</h2>
+        </div>
+
+        <div class="game-grid">
+
+            <!-- Card 1: Husain Lao Game -->
+            <div class="game-card">
+                <div class="card-banner banner-runner">
+                    <i class="fa-solid fa-person-running banner-icon" style="color: var(--primary-neon);"></i>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="game-tag tag-runner">3D Runner</span>
+                    </div>
+                    <h3 class="game-title">Husain Lao Game</h3>
+                    <p class="game-desc">কয়েন কালেকশন করুন, বাধা এড়িয়ে চলুন এবং দ্রুত গতিতে সেরা হাই-স্কোর করার চেষ্টা করুন।</p>
+                    <button class="play-btn" onclick="openGame('Husain Lao Game')">
+                        <i class="fa-solid fa-play"></i> প্লে করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Racing -->
+            <div class="game-card">
+                <div class="card-banner banner-racing">
+                    <i class="fa-solid fa-car-side banner-icon" style="color: var(--secondary-neon);"></i>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="game-tag tag-racing">Racing</span>
+                    </div>
+                    <h3 class="game-title">Speed Racing 3D</h3>
+                    <p class="game-desc">হাই-স্পিড কার রেসিং থ্রিল, রিয়েলিস্টিক ড্রাইভ ফিজিক্স এবং স্মুথ কন্ট্রোল সিস্টেম।</p>
+                    <button class="play-btn" onclick="openGame('Speed Racing 3D')">
+                        <i class="fa-solid fa-play"></i> প্লে করুন
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 3: Skateboard -->
+            <div class="game-card">
+                <div class="card-banner banner-skate">
+                    <i class="fa-solid fa-skateboard banner-icon" style="color: var(--accent-yellow);"></i>
+                </div>
+                <div class="card-body">
+                    <div class="tag-group">
+                        <span class="game-tag tag-skate">Action</span>
+                    </div>
+                    <h3 class="game-title">Skateboard Adventure</h3>
+                    <p class="game-desc">পাহাড় ও খাদ পার হয়ে পানির বোতল কালেক্ট করুন এবং সার্ভাইভ করে স্কোর বাড়ান।</p>
+                    <button class="play-btn" onclick="openGame('Skateboard Adventure')">
+                        <i class="fa-solid fa-play"></i> প্লে করুন
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Interactive Modal -->
+    <div class="game-modal" id="gameModal">
+        <div class="modal-content" id="modalContent">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Game Title</h3>
+                <div class="modal-controls">
+                    <button class="fullscreen-btn" onclick="toggleFullScreen()"><i class="fa-solid fa-expand"></i> ফুলস্ক্রিন</button>
+                    <button class="close-btn" onclick="closeGame()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Game Canvas & UI Elements Inject Here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dynamic Typing Effect
+        const words = ["অসাম ৩ডি গেমসমূহ!", "রেসিং ও আর্কেড প্রজেক্ট!", "হাই-কোয়ালিটি ওয়েব গেমস!"];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        const typingElement = document.querySelector('.typing-text');
+
+        function type() {
+            const currentWord = words[wordIndex];
+            
+            if (isDeleting) {
+                typingElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                typeSpeed = 500;
+            }
+
+            setTimeout(type, typeSpeed);
+        }
+
+        document.addEventListener("DOMContentLoaded", type);
+
+        // --- FULL SCREEN FUNCTIONALITY ---
+        function toggleFullScreen() {
+            const modalContent = document.getElementById('modalContent');
+            if (!document.fullscreenElement) {
+                if (modalContent.requestFullscreen) {
+                    modalContent.requestFullscreen();
+                } else if (modalContent.webkitRequestFullscreen) { /* Safari */
+                    modalContent.webkitRequestFullscreen();
+                } else if (modalContent.msRequestFullscreen) { /* IE11 */
+                    modalContent.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            setTimeout(onWindowResize, 100);
+        });
+
+        // --- GAME ENGINE VARIABLES & LOGIC ---
+        let scene, camera, renderer, labelRenderer, player, thief, wife;
+        let obstacles = [], environmentObjects = [];
+        let lanes = [-2.2, 0, 2.2], currentLane = 1, targetX = 0;
+        
+        let isGrounded = true;
+        let playerVelocityY = 0;
+        
+        const gravity = -0.018; 
+        const jumpForce = 0.28; 
+
+        let gameActive = false, isPaused = false;
+        let animFrameId = null;
+        
+        const baseSpeed = 0.30; 
+        let speed = baseSpeed; 
+        
+        let score = 0;
+        let spawnTimer = 0, envTimer = 0, animationTime = 0;
+        let pLeftLeg, pRightLeg, pLeftArm, pRightArm, tLeftLeg, tRightLeg;
+
+        let audioListener, bgmSound;
+        const audioUrl = 'https://www.image2url.com/r2/default/audio/1780138650031-27a68bd5-d29e-4008-a59e-1a0beee58ccc.mp3';
+
+        // Modal Controls
+        function openGame(title) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('gameModal').style.display = 'flex';
+            
+            const modalBody = document.getElementById('modalBody');
+
+            if (title === 'Husain Lao Game') {
+                modalBody.innerHTML = `
+                    <div class="game-container-wrapper" id="gameCanvasContainer">
+                        <div id="start-screen">
+                            <div class="game-title-text">🌅 লাউ রানার 3D 🌅<br><span style="font-size: 16px; color: #fff;">সকালের হালকা রোদের সংস্করণ</span></div>
+                            <button class="ui-btn" style="font-size: 18px; padding: 12px 35px; background: linear-gradient(135deg, #11998e, #38ef7d); color: white; border: none; box-shadow: 0 6px 20px rgba(56,239,125,0.4);" onclick="startTheGame()">গেম শুরু করুন 🚀</button>
+                        </div>
+
+                        <div id="top-bar">
+                            <button class="ui-btn" onclick="togglePause()" id="pause-btn-ui">PAUSE</button>
+                            <button class="ui-btn" id="restart-btn-ui" onclick="restartGame()">RESTART</button>
+                        </div>
+
+                        <div id="score-board">স্কোর: <span id="score-val">0</span></div>
+
+                        <div id="controls-container">
+                            <button class="nav-btn" id="left-btn">◀</button>
+                            <button id="jump-btn">JUMP</button>
+                            <button class="nav-btn" id="right-btn">▶</button>
+                        </div>
+
+                        <div id="game-over-screen" class="overlay-screen">
+                            <div id="game-over-text">⚠️ এই লাউ ঢুকে গেল..!</div>
+                            <div id="final-score" style="color: #1a2a3a; font-size: 20px; margin-top: 15px; font-weight: bold;">আপনার স্কোর: 0</div>
+                            <button class="ui-btn" style="margin-top:25px; font-size:18px; background: linear-gradient(135deg, #ff4b1f, #ff9068); border: none; color: white;" onclick="restartGame()">আবার খেলুন 🔄</button>
+                        </div>
+
+                        <div id="pause-screen" class="overlay-screen">
+                            <div style="font-size: 32px; color: #1a2a3a; font-weight: bold;">গেম থামানো হয়েছে ⏸</div>
+                            <button class="ui-btn" style="margin-top:25px; font-size:18px; background: linear-gradient(135deg, #11998e, #38ef7d); border: none; color: white;" onclick="togglePause()">RESUME ▶</button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                modalBody.innerHTML = `<div style="color:var(--primary-neon); font-size:1.2rem; text-align:center;"><i class="fa-solid fa-gamepad fa-bounce" style="font-size:2rem; margin-bottom:10px; display:block;"></i>${title} খুব শীঘ্রই যুক্ত করা হচ্ছে...</div>`;
+            }
+        }
+
+        function closeGame() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            }
+            document.getElementById('gameModal').style.display = 'none';
+            gameActive = false;
+            if (animFrameId) cancelAnimationFrame(animFrameId);
+            if (bgmSound && typeof bgmSound.stop === 'function') bgmSound.stop();
+            document.getElementById('modalBody').innerHTML = '';
+            obstacles = [];
+            environmentObjects = [];
+        }
+
+        function startTheGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            gameActive = true;
+            initGameEngine();
+            animate();
+            setupAudio();
+            setupControls();
+        }
+
+        function setupAudio() {
+            if (!audioListener) {
+                audioListener = new THREE.AudioListener();
+                camera.add(audioListener);
+            }
+            if (audioListener.context && audioListener.context.state === 'suspended') {
+                audioListener.context.resume();
+            }
+
+            bgmSound = new THREE.Audio(audioListener);
+            const audioLoader = new THREE.AudioLoader();
+            
+            audioLoader.load(audioUrl, function(buffer) {
+                bgmSound.setBuffer(buffer);
+                bgmSound.setLoop(true);
+                bgmSound.setVolume(0.7);
+                if (gameActive && !isPaused) {
+                    bgmSound.play();
+                }
+            }, null, function(err) {
+                playFallbackAudio();
+            });
+        }
+
+        function playFallbackAudio() {
+            try {
+                let audio = new Audio(audioUrl);
+                audio.loop = true;
+                audio.volume = 0.7;
+                audio.play();
+                bgmSound = {
+                    play: () => audio.play(),
+                    pause: () => audio.pause(),
+                    stop: () => { audio.pause(); audio.currentTime = 0; },
+                    isPlaying: !audio.paused
+                };
+            } catch(e) {
+                console.error("Audio failed: ", e);
+            }
+        }
+
+        function setupControls() {
+            document.getElementById('jump-btn').addEventListener('click', function(e) { e.preventDefault(); triggerJump(); });
+            document.getElementById('jump-btn').addEventListener('touchstart', function(e) { e.preventDefault(); triggerJump(); });
+            document.getElementById('left-btn').addEventListener('click', function(e) { e.preventDefault(); moveSide(-1); });
+            document.getElementById('left-btn').addEventListener('touchstart', function(e) { e.preventDefault(); moveSide(-1); });
+            document.getElementById('right-btn').addEventListener('click', function(e) { e.preventDefault(); moveSide(1); });
+            document.getElementById('right-btn').addEventListener('touchstart', function(e) { e.preventDefault(); moveSide(1); });
+
+            window.addEventListener('keydown', (e) => {
+                if (!gameActive || isPaused) return;
+                if (e.code === 'Space' || e.code === 'ArrowUp') triggerJump();
+                if (e.code === 'ArrowLeft') moveSide(-1);
+                if (e.code === 'ArrowRight') moveSide(1);
+            });
+
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', handleTilt);
+            }
+        }
+
+        function initGameEngine() {
+            const container = document.getElementById('gameCanvasContainer');
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+
+            scene = new THREE.Scene();
+            
+            scene.background = new THREE.Color(0xffdfa9); 
+            scene.fog = new THREE.FogExp2(0xffd285, 0.009);
+
+            camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+            camera.position.set(0, 5.2, 8.5);
+            camera.lookAt(0, 1.8, -4);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+            renderer.setSize(width, height);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
+            renderer.toneMapping = THREE.ACESFilmicToneMapping; 
+            renderer.toneMappingExposure = 1.1; 
+            container.appendChild(renderer.domElement);
+
+            labelRenderer = new THREE.CSS2DRenderer();
+            labelRenderer.setSize(width, height);
+            labelRenderer.domElement.style.position = 'absolute';
+            labelRenderer.domElement.style.top = '0px';
+            labelRenderer.domElement.style.pointerEvents = 'none';
+            container.appendChild(labelRenderer.domElement);
+
+            let ambientLight = new THREE.AmbientLight(0xffe2b3, 0.85); 
+            scene.add(ambientLight);
+
+            let hemiLight = new THREE.HemisphereLight(0xffedd8, 0x3d405b, 0.6); 
+            hemiLight.position.set(0, 50, 0);
+            scene.add(hemiLight);
+
+            let morningSunLight = new THREE.DirectionalLight(0xffb703, 2.2); 
+            morningSunLight.position.set(-30, 25, -30); 
+            morningSunLight.castShadow = true;
+            morningSunLight.shadow.mapSize.width = 2048; 
+            morningSunLight.shadow.mapSize.height = 2048;
+            morningSunLight.shadow.bias = -0.0002;
+            scene.add(morningSunLight);
+
+            createMorningEnvironment();
+
+            player = createHumanCharacter(false, 'হুসাইন'); 
+            scene.add(player);
+            
+            thief = createHumanCharacter(true, ''); 
+            thief.position.set(0, 0, -12); 
+            scene.add(thief); 
+            
+            wife = createWifeCharacter(); 
+            scene.add(wife);
+
+            for(let i=0; i<25; i++) {
+                spawnMorningTree((Math.random() * -400) - 20);
+            }
+
+            window.addEventListener('resize', onWindowResize);
+        }
+
+        function createMorningEnvironment() {
+            let roadGeo = new THREE.BoxGeometry(7.2, 0.2, 1000);
+            let roadMat = new THREE.MeshStandardMaterial({ color: 0x4a4e69, roughness: 0.6 });
+            let road = new THREE.Mesh(roadGeo, roadMat);
+            road.position.z = -450;
+            road.receiveShadow = true;
+            scene.add(road);
+
+            for(let l of lanes) {
+                let lineGeo = new THREE.BoxGeometry(0.12, 0.22, 1000);
+                let lineMat = new THREE.MeshStandardMaterial({ color: 0xffb703, emissive: 0xfb8500, emissiveIntensity: 0.3 });
+                let line = new THREE.Mesh(lineGeo, lineMat);
+                line.position.set(l, -0.01, -450);
+                scene.add(line);
+            }
+
+            let grassMat = new THREE.MeshStandardMaterial({ color: 0x3a5a40, roughness: 0.8 });
+            let fieldL = new THREE.Mesh(new THREE.BoxGeometry(60, 0.1, 1000), grassMat);
+            fieldL.position.set(-33.6, -0.05, -450);
+            fieldL.receiveShadow = true;
+            scene.add(fieldL);
+            
+            let fieldR = fieldL.clone(); 
+            fieldR.position.x = 33.6; 
+            scene.add(fieldR);
+        }
+
+        function handleTilt(event) {
+            if (!gameActive || isPaused) return;
+            let tilt = event.gamma; 
+            if (tilt > 25) tilt = 25; if (tilt < -25) tilt = -25;
+            targetX = (tilt / 25) * 2.2; 
+        }
+
+        function moveSide(dir) {
+            if (!gameActive || isPaused) return;
+            currentLane += dir;
+            if(currentLane < 0) currentLane = 0;
+            if(currentLane > 2) currentLane = 2;
+            targetX = lanes[currentLane];
+        }
+
+        function triggerJump() { 
+            if (isGrounded && gameActive && !isPaused) { 
+                playerVelocityY = jumpForce; 
+                isGrounded = false; 
+            } 
+        }
+
+        function createHumanCharacter(isThief, nameText) {
+            const group = new THREE.Group();
+            
+            let coatMat = new THREE.MeshStandardMaterial({ color: isThief ? 0x222222 : 0x005f73, roughness: 0.5 });
+            let coat = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.9, 0.5), coatMat);
+            coat.position.y = 1.4; 
+            coat.castShadow = true; 
+            coat.receiveShadow = true;
+            group.add(coat);
+
+            let bodyMat = new THREE.MeshStandardMaterial({ color: isThief ? 0x444444 : 0x0a9396, roughness: 0.5 });
+            let lowerBody = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.44, 0.65, 16), bodyMat);
+            lowerBody.castShadow = true;
+            lowerBody.position.y = 0.88; 
+            group.add(lowerBody);
+
+            let head = new THREE.Mesh(new THREE.SphereGeometry(0.26, 32, 32), new THREE.MeshStandardMaterial({ color: 0xffd1b3, roughness: 0.4 }));
+            head.position.y = 2.0; 
+            head.castShadow = true;
+            group.add(head);
+
+            if(isThief) {
+                let maskMat = new THREE.MeshStandardMaterial({ color: 0x050505, roughness: 0.9 });
+                let mask = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.22, 0.38), maskMat);
+                mask.position.set(0, 2.0, -0.1); 
+                group.add(mask);
+            } else {
+                let hairMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.8 });
+                let hairTop = new THREE.Mesh(new THREE.SphereGeometry(0.28, 16, 16), hairMat);
+                hairTop.position.set(0, 2.12, 0.02);
+                hairTop.scale.set(1.1, 1.0, 1.1);
+                group.add(hairTop);
+
+                let hairBack = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.3, 0.35), hairMat);
+                hairBack.position.set(0, 2.0, 0.12);
+                group.add(hairBack);
+            }
+
+            let legGeo = new THREE.CylinderGeometry(0.09, 0.09, 0.58, 12);
+            let skinMat = new THREE.MeshStandardMaterial({ color: 0xffd1b3 });
+            let leftLeg = new THREE.Mesh(legGeo, skinMat);
+            leftLeg.position.set(-0.2, 0.29, 0); 
+            leftLeg.castShadow = true; 
+            group.add(leftLeg);
+            
+            let rightLeg = leftLeg.clone(); 
+            rightLeg.position.x = 0.2; 
+            group.add(rightLeg);
+
+            let armGeo = new THREE.BoxGeometry(0.14, 0.65, 0.14);
+            let leftArm = new THREE.Mesh(armGeo, coatMat); 
+            leftArm.position.set(-0.5, 1.35, 0); leftArm.castShadow = true;
+            group.add(leftArm);
+            
+            let rightArm = leftArm.clone(); rightArm.position.x = 0.5; group.add(rightArm);
+
+            if (!isThief && nameText !== '') {
+                const div = document.createElement('div');
+                div.className = 'character-label';
+                div.textContent = nameText;
+                const label = new THREE.CSS2DObject(div);
+                label.position.set(0, 2.7, 0);
+                group.add(label);
+            }
+
+            if (isThief) { tLeftLeg = leftLeg; tRightLeg = rightLeg; } 
+            else { pLeftLeg = leftLeg; pRightLeg = rightLeg; pLeftArm = leftArm; pRightArm = rightArm; }
+            return group;
+        }
+
+        function createWifeCharacter() {
+            const group = new THREE.Group();
+            let outfitMat = new THREE.MeshStandardMaterial({ color: 0xee9b00, roughness: 0.6 });
+            let body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.3, 1.1, 16), outfitMat);
+            body.position.y = 0.6; body.castShadow = true;
+            group.add(body);
+            
+            let head = new THREE.Mesh(new THREE.SphereGeometry(0.23, 24, 24), new THREE.MeshStandardMaterial({ color: 0xffd1b3 }));
+            head.position.y = 1.45; group.add(head);
+
+            let hairMat = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 });
+            let longHair = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.8, 0.18), hairMat);
+            longHair.position.set(0, 1.2, 0.15); group.add(longHair);
+
+            group.rotation.z = Math.PI / 2.5; 
+            return group;
+        }
+
+        function spawnMorningTree(zPos) {
+            let tree = new THREE.Group();
+            let trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.3, 3.0, 10), new THREE.MeshStandardMaterial({ color: 0x5c3d2e, roughness: 0.9 }));
+            trunk.position.y = 1.5; trunk.castShadow = true;
+            tree.add(trunk);
+            
+            let leavesMat = new THREE.MeshStandardMaterial({ color: 0x31572c, roughness: 0.6 }); 
+            let leaves1 = new THREE.Mesh(new THREE.ConeGeometry(1.6, 2.2, 8), leavesMat);
+            leaves1.position.y = 2.8; leaves1.castShadow = true;
+            tree.add(leaves1);
+
+            let leaves2 = new THREE.Mesh(new THREE.ConeGeometry(1.2, 1.8, 8), new THREE.MeshStandardMaterial({ color: 0x4f772d, roughness: 0.5 }));
+            leaves2.position.y = 3.9; leaves2.castShadow = true; 
+            tree.add(leaves2);
+            
+            let side = Math.random() > 0.5 ? 1 : -1;
+            tree.position.set(side * (5.5 + Math.random() * 6), 0, zPos);
+            scene.add(tree); environmentObjects.push(tree);
+        }
+
+        function spawnLau() {
+            let lauGroup = new THREE.Group();
+            
+            let lauMat = new THREE.MeshStandardMaterial({ 
+                color: 0x39ff14,            
+                emissive: 0x1e820a,         
+                emissiveIntensity: 0.55,    
+                roughness: 0.2,             
+                metalness: 0.1 
+            }); 
+
+            let bottom = new THREE.Mesh(new THREE.SphereGeometry(0.46, 20, 20), lauMat);
+            bottom.position.y = 0.42; bottom.castShadow = true;
+            lauGroup.add(bottom);
+
+            let neck = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.36, 0.85, 16), lauMat);
+            neck.position.y = 0.92; neck.castShadow = true;
+            lauGroup.add(neck);
+
+            let stemMat = new THREE.MeshStandardMaterial({ color: 0x1b4332 });
+            let stem = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.05, 0.2, 8), stemMat);
+            stem.position.y = 1.38;
+            lauGroup.add(stem);
+
+            let randomLane = lanes[Math.floor(Math.random() * 3)];
+            lauGroup.position.set(randomLane, -0.05, -90); 
+            
+            scene.add(lauGroup);
+            obstacles.push(lauGroup);
+        }
+
+        function togglePause() { 
+            if (!gameActive) return; 
+            isPaused = !isPaused; 
+            document.getElementById('pause-screen').style.display = isPaused ? 'flex' : 'none'; 
+            
+            if (bgmSound) {
+                if (isPaused) { if(typeof bgmSound.pause === 'function') bgmSound.pause(); } 
+                else { if(typeof bgmSound.play === 'function') bgmSound.play(); }
+            }
+        }
+        
+        function gameOver() { 
+            gameActive = false; 
+            document.getElementById('game-over-screen').style.display = 'flex'; 
+            document.getElementById('final-score').innerText = "আপনার স্কোর: " + Math.floor(score);
+            if (bgmSound && typeof bgmSound.stop === 'function') bgmSound.stop();
+        }
+
+        function restartGame() {
+            for (let i = 0; i < obstacles.length; i++) scene.remove(obstacles[i]); obstacles = [];
+            targetX = 0; currentLane = 1; score = 0;
+            speed = baseSpeed; 
+            
+            player.position.set(0, 0, 0); player.rotation.z = 0; 
+            thief.position.set(0, 0, -12); 
+            playerVelocityY = 0; isGrounded = true; gameActive = true; isPaused = false; spawnTimer = 0; animationTime = 0;
+            
+            document.getElementById('game-over-screen').style.display = 'none'; 
+            document.getElementById('pause-screen').style.display = 'none';
+            document.getElementById('score-val').innerText = "0";
+            
+            if (bgmSound && typeof bgmSound.play === 'function') bgmSound.play();
+        }
+
+        function animate() {
+            animFrameId = requestAnimationFrame(animate);
+            if (gameActive && !isPaused) {
+                animationTime += (0.18 * (speed / baseSpeed)); 
+                score += (0.15 * (speed / baseSpeed)); 
+                document.getElementById('score-val').innerText = Math.floor(score);
+
+                speed += 0.00008; 
+                if(speed > 0.70) speed = 0.70;
+
+                let xDiff = targetX - player.position.x;
+                player.position.x += xDiff * 0.22; 
+                player.rotation.z = -xDiff * 0.22;
+
+                if(player.position.x > 3.0) player.position.x = 3.0;
+                if(player.position.x < -3.0) player.position.x = -3.0;
+
+                player.position.y += playerVelocityY; 
+                playerVelocityY += gravity;
+                
+                if (player.position.y <= 0) { 
+                    player.position.y = 0; 
+                    playerVelocityY = 0; 
+                    isGrounded = true; 
+                }
+
+                if (isGrounded) {
+                    pLeftLeg.rotation.x = Math.sin(animationTime) * 0.75; 
+                    pRightLeg.rotation.x = -Math.sin(animationTime) * 0.75;
+                    pLeftArm.rotation.x = -Math.sin(animationTime) * 0.6; 
+                    pRightArm.rotation.x = Math.sin(animationTime) * 0.6;
+                    player.position.y = Math.abs(Math.sin(animationTime * 2)) * 0.08;
+                } else {
+                    pLeftLeg.rotation.x = -0.4; pRightLeg.rotation.x = 0.2;
+                    pLeftArm.rotation.x = 0.4; pRightArm.rotation.x = -0.3;
+                }
+
+                thief.position.z = player.position.z - 12;
+                thief.position.x = THREE.MathUtils.lerp(thief.position.x, player.position.x * 0.7, 0.05); 
+                tLeftLeg.rotation.x = Math.sin(animationTime * 1.1) * 0.6; 
+                tRightLeg.rotation.x = -Math.sin(animationTime * 1.1) * 0.6;
+                
+                wife.position.set(thief.position.x + 0.4, thief.position.y + 1.2, thief.position.z);
+
+                camera.position.z = player.position.z + 8.5; 
+                camera.position.x = player.position.x * 0.5;
+
+                envTimer++; 
+                if(envTimer > 20) { 
+                    spawnMorningTree(-200); 
+                    envTimer = 0; 
+                }
+                for (let i = environmentObjects.length - 1; i >= 0; i--) {
+                    environmentObjects[i].position.z += speed;
+                    if (environmentObjects[i].position.z > 15) { 
+                        scene.remove(environmentObjects[i]); 
+                        environmentObjects.splice(i, 1); 
+                    }
+                }
+
+                spawnTimer++; 
+                if (spawnTimer > 30) { 
+                    spawnLau(); 
+                    spawnTimer = 0; 
+                }
+                
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    obstacles[i].position.z += speed;
+                    
+                    let diffX = Math.abs(player.position.x - obstacles[i].position.x);
+                    let diffZ = Math.abs(player.position.z - obstacles[i].position.z);
+                    
+                    if (diffX < 0.8 && diffZ < 0.8) { 
+                        if (player.position.y < 1.1) { 
+                            gameOver(); 
+                        }
+                    }
+                    if (obstacles[i].position.z > 15) { 
+                        scene.remove(obstacles[i]); 
+                        obstacles.splice(i, 1); 
+                    }
+                }
+            }
+            if(renderer) renderer.render(scene, camera);
+            if(labelRenderer) labelRenderer.render(scene, camera); 
+        }
+
+        function onWindowResize() { 
+            const container = document.getElementById('gameCanvasContainer');
+            if(!container) return;
+            const width = container.clientWidth;
+            const height = container.clientHeight;
+            
+            camera.aspect = width / height; 
+            camera.updateProjectionMatrix(); 
+            renderer.setSize(width, height); 
+            labelRenderer.setSize(width, height);
+        }
+    </script>
+</body>
+</html>
